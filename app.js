@@ -15,7 +15,7 @@ conn();
 app.use(cookieParser());
 
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: "https://luiz-coelho.github.io",
   credentials: true,
   allowedHeaders: "Content-Type,Authorization",
 };
