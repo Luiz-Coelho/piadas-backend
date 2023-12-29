@@ -5,7 +5,7 @@ const userRouter = require("./user");
 const favoritesRouter = require("./favorites");
 const profilePictureRouter = require("./profilePicture");
 
-const { auth } = require("../middlewares/authMiddlewares");
+const auth = require("../middlewares/authMiddlewares");
 
 router.use("/", authRouter);
 

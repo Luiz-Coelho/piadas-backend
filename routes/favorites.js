@@ -6,7 +6,7 @@ router
   .route("/favorites")
   .post((req, res) => favoriteController.create(req, res));
 
-router.route("/favorites/").get((req, res) => favoriteController.get(req, res));
+router.route("/favorites").get((req, res) => favoriteController.get(req, res));
 
 router
   .route("/favorites/:id")

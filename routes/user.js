@@ -4,10 +4,10 @@ const userController = require("../controllers/userController");
 
 const upload = require("../config/multer");
 
-router.route("/user/:id").get((req, res) => userController.getUser(req, res));
+router.route("/user").get((req, res) => userController.getUser(req, res));
 
 router
-  .route("/user/:id")
+  .route("/user")
   .put(upload.single("profilePicture"), (req, res) =>
     userController.updateUser(req, res)
   );
