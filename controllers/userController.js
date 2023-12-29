@@ -3,9 +3,7 @@ const { uploadFile } = require("../config/s3");
 
 exports.getUser = async (req, res) => {
   try {
-    console.log("Chegou aqui");
     const id = req.user._id;
-    console.log("Chegou aqui");
 
     if (!id) {
       return res.status(401).json({ msg: "Unauthorized" });
