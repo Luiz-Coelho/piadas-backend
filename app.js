@@ -14,6 +14,11 @@ conn();
 
 app.use(cookieParser());
 
+app.use((req, res, next) => {
+  console.log("Cookies recebidos:", req.cookies);
+  next();
+});
+
 const corsOptions = {
   origin: "https://luiz-coelho.github.io",
   credentials: true,
