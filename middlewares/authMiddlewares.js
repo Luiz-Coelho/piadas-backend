@@ -1,54 +1,34 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-const auth = (req, res, next) => {
-  const token = req.cookies.user;
+const auth = async (req, res, next) => {
+  const { authorization } = req.headers;
 
-  console.log("Token recebido:", token); // Adicionando log para o token recebido
-
-  if (token) {
-    jwt.verify(token, process.env.SECRET, (error, decodedToken) => {
-      if (error) {
-        console.log("Erro ao verificar o token:", error.message); // Log do erro, se houver
-        return res.status(401).json({ msg: "Token inválido" });
-      } else {
-        console.log("Token decodificado:", decodedToken); // Log do token decodificado
-        req.user = decodedToken.user;
-        next();
-      }
-    });
-  } else {
-    console.log("Token não fornecido"); // Log se o token não estiver presente
-    return res.status(401).json({ msg: "Token não fornecido" });
+  if (!authorization) {
+    return res.status(401).json({ error: "Authorization token required" });
   }
-};
 
-const checkUser = (req, res, next) => {
-  const token = req.cookies.user;
+  const token = authorization.split(" ")[1];
 
-  if (token) {
-    jwt.verify(token, process.env.SECRET, async (error, decodedToken) => {
-      if (error) {
-        res.locals.user = null;
-        next();
-      } else {
-        try {
-          const user = await User.findById(decodedToken.id);
-          res.locals.user = user;
-          next();
-        } catch (error) {
-          res.locals.user = null;
-          next();
-        }
-      }
-    });
-  } else {
-    res.locals.user = null;
+  try {
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+
+    if (!decodedToken.user) {
+      throw new Error("Token inválido");
+    }
+
+    const user = await User.findById(decodedToken.user._id);
+
+    if (!user) {
+      throw new Error("Usuário não encontrado");
+    }
+
+    req.user = user;
     next();
+  } catch (error) {
+    console.log(error);
+    res.status(401).json({ error: "Requisição não autorizada" });
   }
 };
 
-module.exports = {
-  auth,
-  checkUser,
-};
+module.exports = { auth };
