@@ -24,6 +24,7 @@ exports.getUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
   try {
     const id = req.user._id;
+    const newUserData = req.body;
 
     if (!id) {
       return res.status(401).json({ msg: "Unauthorized" });
@@ -39,7 +40,7 @@ exports.updateUser = async (req, res) => {
       user.profilePicture = await uploadFile(req.file);
     }
 
-    const updatedUser = await User.findByIdAndUpdate(id, user);
+    const updatedUser = await User.findByIdAndUpdate(id, newUserData);
 
     if (!updatedUser) {
       res.status(404).json({ msg: "User not found" });
