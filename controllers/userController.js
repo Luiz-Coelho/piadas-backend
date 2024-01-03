@@ -23,8 +23,17 @@ exports.getUser = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   try {
-    const id = req.params.id;
-    const user = req.body;
+    const id = req.user._id;
+
+    if (!id) {
+      return res.status(401).json({ msg: "Unauthorized" });
+    }
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
 
     if (req.file) {
       user.profilePicture = await uploadFile(req.file);
